@@ -22,6 +22,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Spinner } from "@/components/ui/spinner";
 import { APP_NAME } from "@/lib/constants";
+import { loginUser, checkUsersTable, authenticateUser } from "./loginUser";
 
 // Form Schema
 const loginSchema = z.object({
@@ -52,8 +53,23 @@ const LoginForm = () => {
     setErrorLogin(null);
     // Activate loading spinner
     setLoading(true);
-    console.log(data);
-    navigate("/");
+    try {
+      // Login the user using Supabase
+      const loginResponse = await loginUser(data.email, data.password);
+      // Fetch the uuid from the login response and check the users table for the authenticated value
+      const userDataResponse = await checkUsersTable(loginResponse.user.id);
+      // If the authenticated value is false, update it to true
+      if (!userDataResponse.authenticated) {
+        await authenticateUser(loginResponse.user.id);
+      }
+      setLoading(false);
+      navigate("/");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorLogin(error.message);
+        setLoading(false);
+      }
+    }
   }
 
   return (
