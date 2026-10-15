@@ -23,6 +23,7 @@ import { toast } from "@/components/ui/toast";
 import { useNavigate } from "react-router";
 import { Spinner } from "@/components/ui/spinner";
 import { APP_NAME } from "@/lib/constants";
+import { registerUser, checkEmailExists } from "./registerUser";
 
 // Form Schema
 const registerSchema = z
@@ -70,14 +71,41 @@ const RegisterForm = () => {
     setErrorRegister(null);
     // Activate loading spinner
     setLoading(true);
-    console.log(data);
-    toast.add({
-      type: "success",
-      description:
-        "Account created successfully. Please check your email to verify your account.",
-      priority: "high",
-    });
-    navigate("/login");
+    try {
+      // Check if the email exists
+      const emailExists = await checkEmailExists(data.email);
+      if (emailExists.length > 0) {
+        setLoading(false);
+        toast.add({
+          type: "error",
+          description: "This email already exists.",
+          priority: "high",
+        });
+        return;
+      }
+      // Register the user with email and password
+      await registerUser(
+        data.email,
+        data.password,
+        data.firstName,
+        data.lastName,
+      );
+      // Display success message and disable spinner loading
+      toast.add({
+        type: "success",
+        description:
+          "Account created successfully. Please check your email to verify your account.",
+        priority: "high",
+      });
+      setLoading(false);
+      navigate("/login");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        // Display Error Message and disable spinner loading
+        setErrorRegister(error.message);
+        setLoading(false);
+      }
+    }
   }
 
   return (
