@@ -3,7 +3,9 @@ import NotFoundPage from "./components/NotFoundPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
 import { Toaster } from "./components/ui/toast";
+import ProtectedLayout from "./components/ProtectedLayout";
 
 function App() {
   return (
@@ -15,6 +17,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        {/* Protected Routes */}
+        <Route element={<ProtectedLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
       </Routes>
 
       <Toaster />

@@ -63,7 +63,7 @@ const LoginForm = () => {
         await authenticateUser(loginResponse.user.id);
       }
       setLoading(false);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrorLogin(error.message);
