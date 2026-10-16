@@ -138,3 +138,6 @@ obj/
 .vs/
 *.user
 *.suo
+
+# misc
+*Checklist.txt
