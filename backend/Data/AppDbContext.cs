@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace ClientFollowUpTracker.Api.Data;
+namespace ClientNudge.Api.Data;
 
 public class AppDbContext : DbContext
 {

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ClientFollowUpTracker.Api.Data;
+using ClientNudge.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

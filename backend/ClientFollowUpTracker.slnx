@@ -1,5 +1,0 @@
-<Solution>
-  <Folder Name="/backend/">
-    <Project Path="backend/ClientFollowUpTracker.Api.csproj" />
-  </Folder>
-</Solution>
