@@ -23,6 +23,7 @@ import { useNavigate } from "react-router";
 import { Spinner } from "@/components/ui/spinner";
 import { APP_NAME } from "@/lib/constants";
 import { loginUser, checkUsersTable, authenticateUser } from "./loginUser";
+import { menuItems } from "@/lib/constants";
 
 // Form Schema
 const loginSchema = z.object({
@@ -63,7 +64,10 @@ const LoginForm = () => {
         await authenticateUser(loginResponse.user.id);
       }
       setLoading(false);
-      navigate("/dashboard");
+      navigate(
+        menuItems.find((item) => item.title === "Dashboard")?.url ??
+          "/dashboard",
+      );
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrorLogin(error.message);

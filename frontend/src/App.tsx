@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import { Toaster } from "./components/ui/toast";
 import ProtectedLayout from "./components/ProtectedLayout";
+import AppLayout from "./components/AppLayout";
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         {/* Protected Routes */}
         <Route element={<ProtectedLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Route>
         </Route>
       </Routes>
 
