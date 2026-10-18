@@ -10,11 +10,59 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavLink } from "react-router";
-import { APP_NAME } from "@/lib/constants";
-import { menuItems } from "@/lib/constants";
+import { NavLink, useLocation, useNavigate } from "react-router";
+import { APP_NAME, menuItems } from "@/lib/constants";
+import { toast } from "./ui/toast";
+import { Button } from "./ui/button";
+import { UserRound, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/lib/db/supabaseClient";
 
 const AppSidebar = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  // Fetch user info
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const firstName = user?.user_metadata?.first_name;
+  const lastName = user?.user_metadata?.last_name;
+  const fullName = [firstName, lastName].filter(Boolean).join(" ");
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.add({
+        type: "error",
+        description: "Failed to log out",
+        priority: "high",
+      });
+      return;
+    }
+    toast.add({
+      type: "success",
+      description: "Successfully signed out.",
+      priority: "high",
+    });
+    navigate("/login", { replace: true });
+  };
+
+  const location = useLocation();
+
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
@@ -30,6 +78,7 @@ const AppSidebar = () => {
                   <SidebarMenuButton
                     render={<NavLink to={item.url} />}
                     tooltip={item.title}
+                    isActive={location.pathname === item.url}
                   >
                     <item.icon />
                     <span>{item.title}</span>
@@ -40,7 +89,21 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter className="border-t p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex size-9 items-center justify-center rounded-full bg-muted">
+            <UserRound className="size-4" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">{fullName}</span>
+            <span className="text-xs text-muted-foreground">{user?.email}</span>
+          </div>
+        </div>
+        <Button variant="outline" onClick={handleLogout} className="w-full">
+          <LogOut />
+          Logout
+        </Button>
+      </SidebarFooter>
     </Sidebar>
   );
 };
