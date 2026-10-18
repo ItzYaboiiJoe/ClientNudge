@@ -64,8 +64,8 @@ const AppSidebar = () => {
   const location = useLocation();
 
   return (
-    <Sidebar>
-      <SidebarHeader className="p-4">
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="p-4 group-data-[collapsible=icon]:hidden">
         <h2 className="text-xl font-semibold">{APP_NAME}</h2>
       </SidebarHeader>
       <SidebarContent>
@@ -89,19 +89,23 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t p-4">
+      <SidebarFooter className="border-t p-2">
         <div className="flex items-center gap-3">
           <div className="flex size-9 items-center justify-center rounded-full bg-muted">
             <UserRound className="size-4" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-medium">{fullName}</span>
             <span className="text-xs text-muted-foreground">{user?.email}</span>
           </div>
         </div>
-        <Button variant="outline" onClick={handleLogout} className="w-full">
+        <Button
+          variant="outline"
+          onClick={handleLogout}
+          className="w-full group-data-[collapsible=icon]:px-0"
+        >
           <LogOut />
-          Logout
+          <span className="group-data-[collapsible=icon]:hidden">Logout</span>
         </Button>
       </SidebarFooter>
     </Sidebar>

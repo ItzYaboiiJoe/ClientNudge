@@ -22,7 +22,7 @@ const AppLayout = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <div className="flex h-16 items-center px-4">
+        <div className="flex h-16 items-center gap-2 border-b px-4">
           <SidebarTrigger />
           <Breadcrumb className="ml-10">
             <BreadcrumbList>
