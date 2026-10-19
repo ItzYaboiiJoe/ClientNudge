@@ -20,17 +20,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontalIcon, SlidersHorizontalIcon } from "lucide-react";
+import { SlidersHorizontalIcon } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 // Fake Users (Placeholder)
 const customers = [
@@ -40,6 +35,7 @@ const customers = [
     phone: "(555) 123-4567",
     email: "sarah@example.com",
     address: "123 Oak Street",
+    status: "Active",
   },
   {
     id: 2,
@@ -47,6 +43,7 @@ const customers = [
     phone: "(555) 234-5678",
     email: "",
     address: "456 Pine Avenue",
+    status: "Active",
   },
   {
     id: 3,
@@ -54,6 +51,7 @@ const customers = [
     phone: "(555) 345-6789",
     email: "emily@example.com",
     address: "789 Maple Drive",
+    status: "Inactive",
   },
   {
     id: 4,
@@ -61,6 +59,7 @@ const customers = [
     phone: "(555) 456-7890",
     email: "david@example.com",
     address: "",
+    status: "Active",
   },
 ];
 
@@ -69,6 +68,8 @@ const CustomersTable = () => {
 
   const totalPages = Math.ceil(customers.length / 10);
   const paginatedCustomers = customers.slice((page - 1) * 10, page * 10);
+
+  const navigate = useNavigate();
 
   return (
     <Card className="shadow-xl">
@@ -97,29 +98,29 @@ const CustomersTable = () => {
               <TableHead>Phone</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Address</TableHead>
-              <TableHead></TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {paginatedCustomers.map((customer) => (
-              <TableRow key={customer.id}>
+              <TableRow
+                key={customer.id}
+                className="cursor-pointer"
+                onClick={() => navigate(`/customers/${customer.id}`)}
+              >
                 <TableCell className="">{customer.name}</TableCell>
                 <TableCell className="p-0">{customer.phone}</TableCell>
                 <TableCell className="p-0">{customer.email || "—"}</TableCell>
                 <TableCell className="p-0">{customer.address || "—"}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontalIcon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <TableCell className="p-0">
+                  <Badge
+                    variant={
+                      customer.status === "Active" ? "default" : "destructive"
+                    }
+                  >
+                    {customer.status}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}

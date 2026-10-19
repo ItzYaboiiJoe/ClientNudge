@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import CustomersPage from "./pages/CustomersPage";
+import CustomerDetailsPage from "./pages/CustomerDetailsPage";
 
 import { BrowserRouter, Routes, Route } from "react-router";
 import NotFoundPage from "./components/NotFoundPage";
@@ -26,6 +27,10 @@ function App() {
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/customers" element={<CustomersPage />} />
+            <Route
+              path="/customers/:customerId"
+              element={<CustomerDetailsPage />}
+            />
           </Route>
         </Route>
       </Routes>
