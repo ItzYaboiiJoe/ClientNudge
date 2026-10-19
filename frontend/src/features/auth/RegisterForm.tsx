@@ -31,12 +31,12 @@ const registerSchema = z
     email: z.email("Enter a valid email").trim().toLowerCase(),
     firstName: z
       .string()
-      .min(2, "First name must be at least 2 characters long")
-      .trim(),
+      .trim()
+      .min(2, "First name must be at least 2 characters long"),
     lastName: z
       .string()
-      .min(2, "Last name must be at least 2 characters long")
-      .trim(),
+      .trim()
+      .min(2, "Last name must be at least 2 characters long"),
     password: z.string().min(6, "Password must be at least 6 characters long"),
     confirmPassword: z.string().min(1, "Confirm your password"),
   })

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import AddCustomerModal from "./AddCustomerModal";
 
 const CustomerHeader = () => {
   return (
@@ -7,10 +8,12 @@ const CustomerHeader = () => {
       <p className="text-sm text-muted-foreground">
         Manage your customers and their information
       </p>
-      <Button>
-        <PlusIcon />
-        Add Customer
-      </Button>
+      <AddCustomerModal>
+        <Button>
+          <PlusIcon />
+          Add Customer
+        </Button>
+      </AddCustomerModal>
     </div>
   );
 };
