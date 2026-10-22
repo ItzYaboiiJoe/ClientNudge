@@ -1,5 +1,6 @@
 import CustomerDetailsHeader from "./CustomerDetailsHeader";
 import CustomerDetailsInfo from "./CustomerIDetailsInfo";
+import CustomerDetailsTable from "./CustomerDetailsTable";
 
 const CustomerDetails = () => {
   return (
@@ -8,6 +9,8 @@ const CustomerDetails = () => {
       <CustomerDetailsHeader />
       {/* Info */}
       <CustomerDetailsInfo />
+      {/* Lead Table */}
+      <CustomerDetailsTable />
     </div>
   );
 };
