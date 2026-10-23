@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { menuItems } from "@/lib/constants";
 
 // Fake Users (Placeholder)
 const customers = [
@@ -107,7 +108,11 @@ const CustomersTable = () => {
               <TableRow
                 key={customer.id}
                 className="cursor-pointer"
-                onClick={() => navigate(`/customers/${customer.id}`)}
+                onClick={() =>
+                  navigate(
+                    `${menuItems.find((item) => item.title === "Customers")!.url}/${customer.id}`,
+                  )
+                }
               >
                 <TableCell className="">{customer.name}</TableCell>
                 <TableCell className="p-0">{customer.phone}</TableCell>
