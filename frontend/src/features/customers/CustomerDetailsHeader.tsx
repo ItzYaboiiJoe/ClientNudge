@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trash, Edit } from "lucide-react";
+import EditCustomerModal from "./EditCustomerModal";
 
 const CustomerDetailsHeader = () => {
   return (
@@ -15,9 +16,11 @@ const CustomerDetailsHeader = () => {
         </p>
       </div>
       <div className="space-x-3">
-        <Button variant={"outline"}>
-          <Edit /> Edit Customer
-        </Button>
+        <EditCustomerModal>
+          <Button variant={"outline"}>
+            <Edit /> Edit Customer
+          </Button>
+        </EditCustomerModal>
         <Button variant={"destructive"}>
           <Trash /> Delete Customer
         </Button>

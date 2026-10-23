@@ -35,7 +35,7 @@ const customers = [
     phone: "(555) 123-4567",
     email: "sarah@example.com",
     address: "123 Oak Street",
-    status: "Active",
+    status: true,
   },
   {
     id: 2,
@@ -43,7 +43,7 @@ const customers = [
     phone: "(555) 234-5678",
     email: "",
     address: "456 Pine Avenue",
-    status: "Active",
+    status: true,
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ const customers = [
     phone: "(555) 345-6789",
     email: "emily@example.com",
     address: "789 Maple Drive",
-    status: "Inactive",
+    status: false,
   },
   {
     id: 4,
@@ -59,7 +59,7 @@ const customers = [
     phone: "(555) 456-7890",
     email: "david@example.com",
     address: "",
-    status: "Active",
+    status: true,
   },
 ];
 
@@ -116,10 +116,10 @@ const CustomersTable = () => {
                 <TableCell className="p-0">
                   <Badge
                     variant={
-                      customer.status === "Active" ? "default" : "destructive"
+                      customer.status === true ? "default" : "destructive"
                     }
                   >
-                    {customer.status}
+                    {customer.status ? "Active" : "Inactive"}
                   </Badge>
                 </TableCell>
               </TableRow>
