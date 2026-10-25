@@ -66,7 +66,19 @@ const AddLeadForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   // Form Submit Handler
   async function onSubmit(data: z.infer<typeof addLeadSchema>) {
+    // Clear Error
+    setErrorAddLead(null);
+    // Activate loading spinner
+    setLoading(true);
     console.log(data);
+    // Display success message and disable spinner loading
+    toast.add({
+      type: "success",
+      description: `Lead "${data.title}" added successfully.`,
+      priority: "high",
+    });
+    // Close modal
+    onSuccess();
   }
 
   return (

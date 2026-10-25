@@ -135,7 +135,10 @@ const EditCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="edit-customer-form-email">
-                  Email Address (Optional)
+                  Email Address{" "}
+                  <span className="text-sm text-muted-foreground">
+                    (Optional)
+                  </span>
                 </FieldLabel>
                 <Input
                   {...field}
@@ -158,7 +161,10 @@ const EditCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="edit-customer-form-address">
-                  Service Address (Optional)
+                  Service Address{" "}
+                  <span className="text-sm text-muted-foreground">
+                    (Optional)
+                  </span>
                 </FieldLabel>
                 <Input
                   {...field}
@@ -181,7 +187,10 @@ const EditCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="edit-customer-form-notes">
-                  Notes (Optional)
+                  Notes{" "}
+                  <span className="text-sm text-muted-foreground">
+                    (Optional)
+                  </span>
                 </FieldLabel>
                 <Textarea
                   {...field}
