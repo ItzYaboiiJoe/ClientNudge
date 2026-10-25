@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { PlusIcon } from "lucide-react";
 import { useNavigate } from "react-router";
+import AddLeadModal from "./AddLeadModal";
 
 // Fake Data
 const leads = [
@@ -76,10 +77,12 @@ const CustomerDetailsTable = () => {
               All leads associated with this customer.
             </CardDescription>
           </div>
-          <Button>
-            <PlusIcon />
-            Add Lead
-          </Button>
+          <AddLeadModal>
+            <Button>
+              <PlusIcon />
+              Add Lead
+            </Button>
+          </AddLeadModal>
         </div>
       </CardHeader>
 
