@@ -17,11 +17,31 @@ import { PlusIcon } from "lucide-react";
 
 // Form Schema
 const addCustomerSchema = z.object({
-  name: z.string().trim().min(1, "Name is required"),
-  phone: z.string().min(1, "Phone number is required"),
-  email: z.email("Enter a valid email").trim().toLowerCase().or(z.literal("")),
-  address: z.string().trim().optional(),
-  notes: z.string().trim().optional(),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Title cannot exceed 100 characters"),
+  phone: z
+    .string()
+    .min(1, "Phone number is required")
+    .max(25, "Phone number cannot exceed 25 characters"),
+  email: z
+    .email("Enter a valid email")
+    .trim()
+    .max(254, "Email cannot exceed 254 characters")
+    .toLowerCase()
+    .or(z.literal("")),
+  address: z
+    .string()
+    .trim()
+    .max(255, "Address cannot exceed 255 characters")
+    .optional(),
+  notes: z
+    .string()
+    .trim()
+    .max(1000, "Notes cannot exceed 1000 characters")
+    .optional(),
 });
 
 const AddCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
