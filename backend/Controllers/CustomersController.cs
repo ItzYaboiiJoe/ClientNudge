@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ClientNudge.Api.Services;
 
 namespace ClientNudge.Api.Controllers;
 
@@ -7,9 +8,18 @@ namespace ClientNudge.Api.Controllers;
 [ApiController]
 public class CustomersController : ControllerBase
 {
-    [HttpGet]
-    public IActionResult GetCustomers()
+    private readonly CustomersService _customersService;
+
+    public CustomersController(CustomersService customersService)
     {
-        return Ok("Customers endpoint working!");
+        _customersService = customersService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCustomers()
+    {
+        var customers = await _customersService.GetCustomersAsync();
+
+        return Ok(customers);
     }
 }
