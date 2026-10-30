@@ -31,9 +31,21 @@ import type { CustomerType } from "./backend/getCustomers";
 
 const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
-  const totalPages = Math.ceil(customers.length / 10);
-  const paginatedCustomers = customers.slice((page - 1) * 10, page * 10);
+  const filteredCustomers = customers.filter((customer) => {
+    const searchTerm = search.toLowerCase().trim();
+    return (
+      customer.name.toLowerCase().includes(searchTerm) ||
+      customer.phone.includes(searchTerm) ||
+      customer.email?.toLowerCase().includes(searchTerm)
+    );
+  });
+  const totalPages = Math.max(1, Math.ceil(filteredCustomers.length / 10));
+  const paginatedCustomers = filteredCustomers.slice(
+    (page - 1) * 10,
+    page * 10,
+  );
 
   const navigate = useNavigate();
 
@@ -59,7 +71,15 @@ const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
           <Badge variant="secondary">{customers.length} customers</Badge>
         </div>
         <div className="flex gap-2">
-          <Input placeholder="Search customers..." className="rounded-full" />
+          <Input
+            placeholder="Search customers..."
+            className="rounded-full"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+          />
           <Button variant="outline" className="rounded-full">
             <SlidersHorizontalIcon />
             Filter
