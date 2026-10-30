@@ -3,24 +3,13 @@ import CustomersStats from "./CustomersStats";
 import CustomersTable from "./CustomersTable";
 import { getCustomers } from "./backend/getCustomers";
 import type { CustomerType } from "./backend/getCustomers";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const Customers = () => {
-  const [customers, setCustomers] = useState<CustomerType[]>([]);
-
-  // Fetch Customers
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const data = await getCustomers();
-        setCustomers(data);
-      } catch (error) {
-        console.error("Failed to fetch customers:", error);
-      }
-    };
-
-    fetchCustomers();
-  }, []);
+  const { data: customers = [] } = useQuery<CustomerType[]>({
+    queryKey: ["customers"],
+    queryFn: getCustomers,
+  });
 
   return (
     <div className="space-y-6 p-10">
