@@ -14,6 +14,7 @@ import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
 import { PlusIcon } from "lucide-react";
+import { createCustomer } from "./backend/createCustomer";
 
 // Form Schema
 const addCustomerSchema = z.object({
@@ -24,8 +25,10 @@ const addCustomerSchema = z.object({
     .max(100, "Title cannot exceed 100 characters"),
   phone: z
     .string()
+    .trim()
     .min(1, "Phone number is required")
-    .max(25, "Phone number cannot exceed 25 characters"),
+    .max(25, "Phone number cannot exceed 25 characters")
+    .regex(/^[0-9+()\s-]+$/, "Enter a valid phone number"),
   email: z
     .email("Enter a valid email")
     .trim()
@@ -68,15 +71,22 @@ const AddCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     setErrorAddCustomer(null);
     // Activate loading spinner
     setLoading(true);
-    console.log(data);
-    // Display success message and disable spinner loading
-    toast.add({
-      type: "success",
-      description: `Customer ${data.name} Added Successfully`,
-      priority: "high",
-    });
-    // Close modal
-    onSuccess();
+    try {
+      await createCustomer(data);
+      // Display success message and disable spinner loading
+      toast.add({
+        type: "success",
+        description: `Customer ${data.name} Added Successfully`,
+        priority: "high",
+      });
+      // Close modal
+      onSuccess();
+    } catch (error) {
+      setErrorAddCustomer(
+        error instanceof Error ? error.message : "Something went wrong.",
+      );
+      setLoading(false);
+    }
   }
 
   return (

@@ -19,7 +19,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(customer => customer.Address).HasColumnName("address");
         builder.Property(customer => customer.Notes).HasColumnName("notes");
         builder.Property(customer => customer.Status).HasColumnName("status");
-        builder.Property(customer => customer.CreatedAt).HasColumnName("created_at");
-        builder.Property(customer => customer.UpdatedAt).HasColumnName("updated_at");
+        builder.Property(customer => customer.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now()");
+        builder.Property(customer => customer.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("now()");
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ClientNudge.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using ClientNudge.Api.Models;
+using System.Security.Claims;
 
 namespace ClientNudge.Api.Controllers;
 
@@ -30,7 +31,7 @@ public class CustomersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomer request)
     {
-        var userId = User.FindFirst("sub")?.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!Guid.TryParse(userId, out var ownerUserId))
         {
             return Unauthorized();

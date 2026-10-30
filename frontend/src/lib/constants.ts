@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 export const APP_NAME = "ClientNudge";
+export const backendUrl = "http://localhost:5203";
 export const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Customers", url: "/customers", icon: Users },
