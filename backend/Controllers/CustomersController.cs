@@ -19,11 +19,16 @@ public class CustomersController : ControllerBase
         _customersService = customersService;
     }
 
+    // Get Customers based on logged in user
     [HttpGet]
     public async Task<IActionResult> GetCustomers()
     {
-        var customers = await _customersService.GetCustomersAsync();
-
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userId, out var ownerUserId))
+        {
+            return Unauthorized();
+        }
+        var customers = await _customersService.GetCustomersAsync(ownerUserId);
         return Ok(customers);
     }
 

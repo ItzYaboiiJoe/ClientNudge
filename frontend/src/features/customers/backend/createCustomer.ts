@@ -20,7 +20,7 @@ export const createCustomer = async (customer: CreateCustomerType) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${data.session?.access_token}`,
+      Authorization: `Bearer ${data.session.access_token}`,
     },
     body: JSON.stringify(customer),
   });

@@ -13,11 +13,15 @@ public class CustomersService
         _context = context;
     }
 
-    public async Task<List<Customer>> GetCustomersAsync()
+    // Get customers from DB based on logged in user
+    public async Task<List<Customer>> GetCustomersAsync(Guid ownerUserId)
     {
-        return await _context.Customers.ToListAsync();
+        return await _context.Customers
+                .Where(customer => customer.OwnerUserId == ownerUserId)
+                .ToListAsync();
     }
 
+    // Insert Customer to DB
     public async Task<Customer> CreateCustomerAsync(Customer customer)
     {
         _context.Customers.Add(customer);

@@ -1,13 +1,26 @@
 import { Card, CardContent } from "@/components/ui/card";
+import type { CustomerType } from "./backend/getCustomers";
 
-// Fake Stats (Placeholder)
-const stats = [
-  { label: "Total Customers", value: 24 },
-  { label: "Active Customers", value: 18 },
-  { label: "New This Month", value: 6 },
-];
+const CustomersStats = ({ customers }: { customers: CustomerType[] }) => {
+  const todayDate = new Date();
+  const stats = [
+    { label: "Total Customers", value: customers.length },
+    {
+      label: "Active Customers",
+      value: customers.filter((customer) => customer.status).length,
+    },
+    {
+      label: "New This Month",
+      value: customers.filter((customer) => {
+        const createdAt = new Date(customer.createdAt);
+        return (
+          createdAt.getUTCMonth() === todayDate.getUTCMonth() &&
+          createdAt.getUTCFullYear() === todayDate.getUTCFullYear()
+        );
+      }).length,
+    },
+  ];
 
-const CustomersStats = () => {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
       {stats.map((stat) => (
