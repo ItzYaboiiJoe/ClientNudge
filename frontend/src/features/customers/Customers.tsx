@@ -1,6 +1,7 @@
 import CustomerHeader from "./CustomersHeader";
 import CustomersStats from "./CustomersStats";
 import CustomersTable from "./CustomersTable";
+import CustomersEmptyState from "./CustomersEmptyState";
 import { getCustomers } from "./backend/getCustomers";
 import type { CustomerType } from "./backend/getCustomers";
 import { useQuery } from "@tanstack/react-query";
@@ -17,8 +18,12 @@ const Customers = () => {
       <CustomerHeader />
       {/* Stats */}
       <CustomersStats customers={customers} />
-      {/* Table */}
-      <CustomersTable customers={customers} />
+      {/* Table and Empty state */}
+      {customers.length === 0 ? (
+        <CustomersEmptyState />
+      ) : (
+        <CustomersTable customers={customers} />
+      )}
     </div>
   );
 };

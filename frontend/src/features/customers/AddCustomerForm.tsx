@@ -15,6 +15,7 @@ import { toast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
 import { PlusIcon } from "lucide-react";
 import { createCustomer } from "./backend/createCustomer";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Form Schema
 const addCustomerSchema = z.object({
@@ -65,6 +66,8 @@ const AddCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     },
   });
 
+  const queryClient = useQueryClient();
+
   // Form Submit Handler
   async function onSubmit(data: z.infer<typeof addCustomerSchema>) {
     // Clear Error
@@ -73,6 +76,10 @@ const AddCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     setLoading(true);
     try {
       await createCustomer(data);
+      // Refresh customers data
+      await queryClient.invalidateQueries({
+        queryKey: ["customers"],
+      });
       // Display success message and disable spinner loading
       toast.add({
         type: "success",
