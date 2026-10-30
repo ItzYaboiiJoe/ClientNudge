@@ -29,7 +29,7 @@ const Customers = () => {
       {/* Stats */}
       <CustomersStats customers={customers} />
       {/* Table */}
-      <CustomersTable />
+      <CustomersTable customers={customers} />
     </div>
   );
 };

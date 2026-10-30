@@ -27,50 +27,26 @@ import { SlidersHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { menuItems } from "@/lib/constants";
+import type { CustomerType } from "./backend/getCustomers";
 
-// Fake Users (Placeholder)
-const customers = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    phone: "(555) 123-4567",
-    email: "sarah@example.com",
-    address: "123 Oak Street",
-    status: true,
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    phone: "(555) 234-5678",
-    email: "",
-    address: "456 Pine Avenue",
-    status: true,
-  },
-  {
-    id: 3,
-    name: "Emily Rodriguez",
-    phone: "(555) 345-6789",
-    email: "emily@example.com",
-    address: "789 Maple Drive",
-    status: false,
-  },
-  {
-    id: 4,
-    name: "David Wilson",
-    phone: "(555) 456-7890",
-    email: "david@example.com",
-    address: "",
-    status: true,
-  },
-];
-
-const CustomersTable = () => {
+const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
   const [page, setPage] = useState(1);
 
   const totalPages = Math.ceil(customers.length / 10);
   const paginatedCustomers = customers.slice((page - 1) * 10, page * 10);
 
   const navigate = useNavigate();
+
+  // To Formate the phone to look nicer
+  const formatPhoneNumber = (phone: string) => {
+    const cleaned = phone.replace(/\D/g, "");
+
+    if (cleaned.length !== 10) {
+      return phone;
+    }
+
+    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+  };
 
   return (
     <Card className="shadow-xl">
@@ -80,7 +56,7 @@ const CustomersTable = () => {
             <CardTitle>All Customers</CardTitle>
             <CardDescription>View and manage customer records</CardDescription>
           </div>
-          <Badge variant="secondary">24 customers</Badge>
+          <Badge variant="secondary">{customers.length} customers</Badge>
         </div>
         <div className="flex gap-2">
           <Input placeholder="Search customers..." className="rounded-full" />
@@ -115,7 +91,7 @@ const CustomersTable = () => {
                 }
               >
                 <TableCell className="">{customer.name}</TableCell>
-                <TableCell className="p-0">{customer.phone}</TableCell>
+                <TableCell>{formatPhoneNumber(customer.phone)}</TableCell>
                 <TableCell className="p-0">{customer.email || "—"}</TableCell>
                 <TableCell className="p-0">{customer.address || "—"}</TableCell>
                 <TableCell className="p-0">
