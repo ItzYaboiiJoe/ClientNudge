@@ -20,6 +20,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,15 +38,24 @@ import type { CustomerType } from "./backend/getCustomers";
 const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const filteredCustomers = customers.filter((customer) => {
     const searchTerm = search.toLowerCase().trim();
-    return (
+
+    const matchesSearch =
       customer.name.toLowerCase().includes(searchTerm) ||
       customer.phone.includes(searchTerm) ||
-      customer.email?.toLowerCase().includes(searchTerm)
-    );
+      customer.email?.toLowerCase().includes(searchTerm);
+
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "active" && customer.status) ||
+      (statusFilter === "inactive" && !customer.status);
+
+    return matchesSearch && matchesStatus;
   });
+
   const totalPages = Math.max(1, Math.ceil(filteredCustomers.length / 10));
   const paginatedCustomers = filteredCustomers.slice(
     (page - 1) * 10,
@@ -80,10 +95,43 @@ const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
               setPage(1);
             }}
           />
-          <Button variant="outline" className="rounded-full">
-            <SlidersHorizontalIcon />
-            Filter
-          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="outline" className="rounded-full">
+                  <SlidersHorizontalIcon />
+                  Filter
+                </Button>
+              }
+            />
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => {
+                  setStatusFilter("all");
+                  setPage(1);
+                }}
+              >
+                All Customers
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setStatusFilter("active");
+                  setPage(1);
+                }}
+              >
+                Active
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setStatusFilter("inactive");
+                  setPage(1);
+                }}
+              >
+                Inactive
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
 
