@@ -1,18 +1,6 @@
 import { supabase } from "@/lib/db/supabaseClient";
 import { backendUrl } from "@/lib/constants";
-
-export type CustomerType = {
-  id: number;
-  ownerUserId: string;
-  name: string;
-  phone: string;
-  email: string | null;
-  address: string | null;
-  notes: string | null;
-  status: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
+import type { CustomerType } from "@/lib/types";
 
 export const getCustomers = async (): Promise<CustomerType[]> => {
   const { data, error } = await supabase.auth.getSession();

@@ -1,13 +1,6 @@
 import { supabase } from "@/lib/db/supabaseClient";
 import { backendUrl } from "@/lib/constants";
-
-export type CreateCustomerType = {
-  name: string;
-  phone: string;
-  email: string;
-  address?: string;
-  notes?: string;
-};
+import type { CreateCustomerType } from "@/lib/types";
 
 export const createCustomer = async (customer: CreateCustomerType) => {
   const { data, error } = await supabase.auth.getSession();

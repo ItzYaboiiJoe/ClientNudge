@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import type { CustomerType } from "./backend/getCustomers";
+import type { CustomerType } from "@/lib/types";
 
 const CustomersStats = ({ customers }: { customers: CustomerType[] }) => {
   const todayDate = new Date();

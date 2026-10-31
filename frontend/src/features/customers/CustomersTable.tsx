@@ -33,7 +33,7 @@ import { SlidersHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { menuItems } from "@/lib/constants";
-import type { CustomerType } from "./backend/getCustomers";
+import type { CustomerType } from "@/lib/types";
 
 const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
   const [page, setPage] = useState(1);

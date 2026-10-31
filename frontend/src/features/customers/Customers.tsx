@@ -3,7 +3,7 @@ import CustomersStats from "./CustomersStats";
 import CustomersTable from "./CustomersTable";
 import CustomersEmptyState from "./CustomersEmptyState";
 import { getCustomers } from "./backend/getCustomers";
-import type { CustomerType } from "./backend/getCustomers";
+import type { CustomerType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 const Customers = () => {

@@ -1,8 +1,24 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import type { CustomerType } from "@/lib/types";
 import { FileText, Mail, MapPin, Phone } from "lucide-react";
 
-const CustomerDetailsInfo = () => {
+const CustomerDetailsInfo = ({
+  customerInfo,
+}: {
+  customerInfo: CustomerType;
+}) => {
+  // To Formate the phone to look nicer
+  const formatPhoneNumber = (phone: string) => {
+    const cleaned = phone.replace(/\D/g, "");
+
+    if (cleaned.length !== 10) {
+      return phone;
+    }
+
+    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+  };
+
   return (
     <div>
       <Card className="shadow-xl">
@@ -17,7 +33,7 @@ const CustomerDetailsInfo = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Phone Number</p>
-                  <p>(555) 123-4567</p>
+                  <p>{formatPhoneNumber(customerInfo.phone)}</p>
                 </div>
               </div>
               {/* Email */}
@@ -27,7 +43,7 @@ const CustomerDetailsInfo = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Email Address</p>
-                  <p>john@example.com</p>
+                  <p>{customerInfo.email || "—"}</p>
                 </div>
               </div>
               {/* Address */}
@@ -39,11 +55,7 @@ const CustomerDetailsInfo = () => {
                   <p className="text-sm text-muted-foreground">
                     Service Address
                   </p>
-                  <p>
-                    123 Oak Street
-                    <br />
-                    Tampa, FL 33602
-                  </p>
+                  <p>{customerInfo.address || "—"}</p>
                 </div>
               </div>
             </div>
@@ -58,9 +70,7 @@ const CustomerDetailsInfo = () => {
 
                 <div className="min-h-32 rounded-xl bg-muted p-4">
                   <p className="text-sm">
-                    Prefers morning appointments. Has a dog on the property.
-                    Interested in seasonal maintenance and possible additional
-                    services in the future.
+                    {customerInfo.notes || "No Notes for this customer"}
                   </p>
                 </div>
               </div>
