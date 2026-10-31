@@ -21,6 +21,14 @@ public class CustomersService
                 .ToListAsync();
     }
 
+    // Get customers from DB based on ID
+    public async Task<Customer?> GetSpecificCustomerAsync(long id, Guid ownerUserId)
+    {
+        return await _context.Customers
+                .Where(customer => customer.Id == id && customer.OwnerUserId == ownerUserId)
+                .FirstOrDefaultAsync();
+    }
+
     // Insert Customer to DB
     public async Task<Customer> CreateCustomerAsync(Customer customer)
     {

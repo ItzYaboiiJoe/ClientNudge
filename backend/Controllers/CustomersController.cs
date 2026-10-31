@@ -32,6 +32,23 @@ public class CustomersController : ControllerBase
         return Ok(customers);
     }
 
+    // Get Specific Customer using Id
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetSingleCustomer(long id)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userId, out var ownerUserId))
+        {
+            return Unauthorized();
+        }
+        var customer = await _customersService.GetSpecificCustomerAsync(id, ownerUserId);
+        if (customer == null)
+        {
+            return NotFound();
+        }
+        return Ok(customer);
+    }
+
     // Create a customer post
     [HttpPost]
     public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomer request)
