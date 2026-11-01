@@ -53,4 +53,16 @@ public class CustomersService
 
         return rowsUpdated > 0;
     }
+
+    // Delete a customer using ownerUserId and customer Id
+    public async Task<Customer?> DeleteCustomerAsync(long id, Guid ownerUserId)
+    {
+        var customer = await GetSpecificCustomerAsync(id, ownerUserId);
+
+        var rowsDeleted = await _context.Customers
+            .Where(customer => customer.Id == id && customer.OwnerUserId == ownerUserId)
+            .ExecuteDeleteAsync();
+
+        return rowsDeleted > 0 ? customer : null;
+    }
 }

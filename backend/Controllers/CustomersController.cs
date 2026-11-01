@@ -87,4 +87,26 @@ public class CustomersController : ControllerBase
         }
         return Ok(updated);
     }
+
+    // Delete a customer using id
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCustomer(long id)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userId, out var ownerUserId))
+        {
+            return Unauthorized();
+        }
+        var deleted = await _customersService.DeleteCustomerAsync(id, ownerUserId);
+        if (deleted == null)
+        {
+            return NotFound();
+        }
+        return Ok(new
+        {
+            status = "Success",
+            id = id,
+            customerName = deleted.Name
+        });
+    }
 }

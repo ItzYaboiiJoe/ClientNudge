@@ -14,14 +14,19 @@ import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { menuItems } from "@/lib/constants";
+import { deleteCustomer } from "./backend/deleteCustomer";
 
 // Fake Data
 const totalLeads: number = 0;
 
 const DeleteCustomerModal = ({
   children,
+  customerId,
+  customerName,
 }: {
   children: React.ReactElement;
+  customerId: number;
+  customerName: string;
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -30,13 +35,21 @@ const DeleteCustomerModal = ({
   // Handle Delete
   const handleDelete = async () => {
     setLoading(true);
-    console.log("Delete");
-    toast.add({
-      type: "success",
-      description: `Customer John Smith deleted successfully.`,
-      priority: "high",
-    });
-    navigate(menuItems.find((item) => item.url === "/customers")!.url);
+    try {
+      await deleteCustomer(customerId);
+      toast.add({
+        type: "success",
+        description: `Customer ${customerName} deleted successfully.`,
+        priority: "high",
+      });
+      navigate(menuItems.find((item) => item.url === "/customers")!.url);
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: `Failed to delete customer ${customerName}. Error: ${error instanceof Error ? error.message : String(error)}`,
+        priority: "high",
+      });
+    }
   };
 
   return (
@@ -49,8 +62,8 @@ const DeleteCustomerModal = ({
           </AlertDialogTitle>
           <AlertDialogDescription>
             {totalLeads > 0
-              ? "John Smith has active leads that must be marked as Won or Lost before this customer can be deleted."
-              : "Are you sure you want to delete John Smith? This will permanently delete the customer and all associated leads and follow-ups. This action cannot be undone."}
+              ? `${customerName} has active leads that must be marked as Won or Lost before this customer can be deleted.`
+              : `Are you sure you want to delete ${customerName}? This will permanently delete the customer and all associated leads and follow-ups. This action cannot be undone.`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

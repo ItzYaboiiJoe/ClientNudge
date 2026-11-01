@@ -35,7 +35,10 @@ const CustomerDetailsHeader = ({
             <Edit /> Edit Customer
           </Button>
         </EditCustomerModal>
-        <DeleteCustomerModal>
+        <DeleteCustomerModal
+          customerId={customerInfo.id}
+          customerName={customerInfo.name}
+        >
           <Button variant={"destructive"}>
             <Trash /> Delete Customer
           </Button>
