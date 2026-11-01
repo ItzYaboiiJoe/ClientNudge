@@ -25,3 +25,17 @@ public class CreateCustomer
     public string? Address { get; set; }
     public string? Notes { get; set; }
 }
+
+// Edit a customer info model
+public class EditCustomer
+{
+    public long Id { get; set; }
+    public Guid OwnerUserId { get; set; }
+    public required string Name { get; set; }
+    public required string Phone { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public string? Notes { get; set; }
+    public bool Status { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}

@@ -18,3 +18,12 @@ export type CreateCustomerType = {
   address?: string;
   notes?: string;
 };
+
+export type EditCustomerType = {
+  name: string;
+  phone: string;
+  email?: string;
+  address?: string;
+  notes?: string;
+  status: boolean;
+};

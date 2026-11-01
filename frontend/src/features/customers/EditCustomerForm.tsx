@@ -14,18 +14,9 @@ import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
-
-// Fake Data
-const customer = {
-  id: 1,
-  name: "Sarah Johnson",
-  phone: "(555) 123-4567",
-  email: "sarah@example.com",
-  address: "123 Oak Street",
-  notes:
-    "Prefers morning appointments. Has a dog on the property. Interested in seasonal maintenance and possible additional services in the future.",
-  status: true,
-};
+import { updateCustomer } from "./backend/updateCustomer";
+import type { CustomerType } from "@/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Form schema
 const editCustomerSchema = z.object({
@@ -37,11 +28,15 @@ const editCustomerSchema = z.object({
   status: z.boolean(),
 });
 
-const EditCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
+const EditCustomerForm = ({
+  onSuccess,
+  customer,
+}: {
+  onSuccess: () => void;
+  customer: CustomerType;
+}) => {
   // State to handle register errors
-  const [errorEditCustomer, setErrorEditCustomer] = useState<string | null>(
-    null,
-  );
+  const [errorEditCustomer, setErrorEditCustomer] = useState("");
   // State to control the spinner loading
   const [loading, setLoading] = useState(false);
 
@@ -51,28 +46,41 @@ const EditCustomerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     defaultValues: {
       name: customer.name,
       phone: customer.phone,
-      email: customer.email,
-      address: customer.address,
-      notes: customer.notes,
+      email: customer.email ?? "",
+      address: customer.address ?? "",
+      notes: customer.notes ?? "",
       status: customer.status,
     },
   });
 
+  const queryClient = useQueryClient();
+
   // Form Submit Handler
   async function onSubmit(data: z.infer<typeof editCustomerSchema>) {
     // Clear Error
-    setErrorEditCustomer(null);
+    setErrorEditCustomer("");
     // Activate loading spinner
     setLoading(true);
-    console.log(data);
-    // Display success message and disable spinner loading
-    toast.add({
-      type: "success",
-      description: `${data.name}'s information updated successfully.`,
-      priority: "high",
-    });
-    // Close modal
-    onSuccess();
+    try {
+      await updateCustomer(customer.id, data);
+      // Refresh customers data
+      await queryClient.invalidateQueries({
+        queryKey: ["customerInfo"],
+      });
+      // Display success message and disable spinner loading
+      toast.add({
+        type: "success",
+        description: `Customer ${data.name} updated successfully!`,
+        priority: "high",
+      });
+      // Close modal
+      onSuccess();
+    } catch (error) {
+      setErrorEditCustomer(
+        error instanceof Error ? error.message : "Something went wrong.",
+      );
+      setLoading(false);
+    }
   }
 
   return (

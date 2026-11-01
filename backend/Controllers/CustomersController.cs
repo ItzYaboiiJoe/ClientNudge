@@ -70,4 +70,21 @@ public class CustomersController : ControllerBase
         var createdCustomer = await _customersService.CreateCustomerAsync(customer);
         return Ok(createdCustomer);
     }
+
+    // Update a customer using id
+    [HttpPut("{id}")]
+    public async Task<IActionResult> EditCustomer(long id, [FromBody] EditCustomer request)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userId, out var ownerUserId))
+        {
+            return Unauthorized();
+        }
+        var updated = await _customersService.EditCustomerAsync(id, ownerUserId, request);
+        if (!updated)
+        {
+            return NotFound();
+        }
+        return Ok(updated);
+    }
 }

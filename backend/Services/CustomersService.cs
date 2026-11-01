@@ -36,4 +36,21 @@ public class CustomersService
         await _context.SaveChangesAsync();
         return customer;
     }
+
+    // Update a customer info using ownerUserId and customer Id
+    public async Task<bool> EditCustomerAsync(long id, Guid ownerUserId, EditCustomer request)
+    {
+        var rowsUpdated = await _context.Customers
+            .Where(customer => customer.Id == id && customer.OwnerUserId == ownerUserId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(customer => customer.Name, request.Name)
+                .SetProperty(customer => customer.Phone, request.Phone)
+                .SetProperty(customer => customer.Email, request.Email)
+                .SetProperty(customer => customer.Address, request.Address)
+                .SetProperty(customer => customer.Notes, request.Notes)
+                .SetProperty(customer => customer.Status, request.Status)
+                .SetProperty(customer => customer.UpdatedAt, DateTime.UtcNow));
+
+        return rowsUpdated > 0;
+    }
 }

@@ -30,7 +30,7 @@ const CustomerDetailsHeader = ({
         </p>
       </div>
       <div className="space-x-3">
-        <EditCustomerModal>
+        <EditCustomerModal customer={customerInfo}>
           <Button variant={"outline"}>
             <Edit /> Edit Customer
           </Button>

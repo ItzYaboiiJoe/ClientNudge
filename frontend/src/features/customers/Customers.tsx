@@ -2,12 +2,13 @@ import CustomerHeader from "./CustomersHeader";
 import CustomersStats from "./CustomersStats";
 import CustomersTable from "./CustomersTable";
 import CustomersEmptyState from "./CustomersEmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getCustomers } from "./backend/getCustomers";
 import type { CustomerType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 const Customers = () => {
-  const { data: customers = [] } = useQuery<CustomerType[]>({
+  const { data: customers = [], isPending } = useQuery<CustomerType[]>({
     queryKey: ["customers"],
     queryFn: getCustomers,
   });
@@ -17,9 +18,16 @@ const Customers = () => {
       {/* Header */}
       <CustomerHeader />
       {/* Stats */}
-      <CustomersStats customers={customers} />
+      {isPending ? (
+        <Skeleton className="h-32 w-full rounded-xl" />
+      ) : (
+        <CustomersStats customers={customers} />
+      )}
+
       {/* Table and Empty state */}
-      {customers.length === 0 ? (
+      {isPending ? (
+        <Skeleton className="h-100 w-full rounded-xl" />
+      ) : customers.length === 0 ? (
         <CustomersEmptyState />
       ) : (
         <CustomersTable customers={customers} />

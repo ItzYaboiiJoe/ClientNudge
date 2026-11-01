@@ -8,8 +8,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import EditCustomerForm from "./EditCustomerForm";
+import type { CustomerType } from "@/lib/types";
 
-const EditCustomerModal = ({ children }: { children: React.ReactElement }) => {
+const EditCustomerModal = ({
+  children,
+  customer,
+}: {
+  children: React.ReactElement;
+  customer: CustomerType;
+}) => {
   // Control modal open and close
   const [open, setOpen] = useState(false);
 
@@ -23,7 +30,10 @@ const EditCustomerModal = ({ children }: { children: React.ReactElement }) => {
             Update the customer's information and status.
           </DialogDescription>
         </DialogHeader>
-        <EditCustomerForm onSuccess={() => setOpen(false)} />
+        <EditCustomerForm
+          onSuccess={() => setOpen(false)}
+          customer={customer}
+        />
       </DialogContent>
     </Dialog>
   );
