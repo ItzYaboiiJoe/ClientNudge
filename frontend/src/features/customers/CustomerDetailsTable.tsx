@@ -62,7 +62,7 @@ const leads = [
 const CustomerDetailsTable = () => {
   const [page, setPage] = useState(1);
 
-  const totalPages = Math.ceil(leads.length / 10);
+  const totalPages = Math.max(1, Math.ceil(leads.length / 10));
   const paginatedLeads = leads.slice((page - 1) * 10, page * 10);
 
   const navigate = useNavigate();
@@ -70,15 +70,16 @@ const CustomerDetailsTable = () => {
   return (
     <Card className="shadow-xl">
       <CardHeader className="space-y-4">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
             <CardTitle>Customer Leads</CardTitle>
             <CardDescription>
               All leads associated with this customer.
             </CardDescription>
           </div>
+
           <AddLeadModal>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <PlusIcon />
               Add Lead
             </Button>
@@ -87,46 +88,48 @@ const CustomerDetailsTable = () => {
       </CardHeader>
 
       <CardContent>
-        <Table>
-          <TableHeader className="bg-muted/50">
-            <TableRow>
-              <TableHead className="px-5">Lead</TableHead>
-              <TableHead>Value</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Created</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {paginatedLeads.map((lead) => (
-              <TableRow
-                key={lead.id}
-                className="cursor-pointer"
-                onClick={() => navigate(`#`)}
-              >
-                <TableCell className="">{lead.name}</TableCell>
-                <TableCell className="p-0">{lead.value}</TableCell>
-                <TableCell className="p-0">
-                  <Badge
-                    variant={lead.status === "Open" ? "default" : "secondary"}
-                    className={
-                      lead.status === "Lost"
-                        ? "bg-red-100 text-red-700"
-                        : lead.status === "Won"
-                          ? "bg-green-100 text-green-700"
-                          : lead.status === "In Progress"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : ""
-                    }
-                  >
-                    {lead.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="p-0">{lead.created}</TableCell>
+        <div className="w-full overflow-x-auto">
+          <Table className="min-w-[600px]">
+            <TableHeader className="bg-muted/50">
+              <TableRow>
+                <TableHead className="px-5">Lead</TableHead>
+                <TableHead>Value</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Created</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+
+            <TableBody>
+              {paginatedLeads.map((lead) => (
+                <TableRow
+                  key={lead.id}
+                  className="cursor-pointer"
+                  onClick={() => navigate("#")}
+                >
+                  <TableCell>{lead.name}</TableCell>
+                  <TableCell>{lead.value}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={lead.status === "Open" ? "default" : "secondary"}
+                      className={
+                        lead.status === "Lost"
+                          ? "bg-red-100 text-red-700"
+                          : lead.status === "Won"
+                            ? "bg-green-100 text-green-700"
+                            : lead.status === "In Progress"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : ""
+                      }
+                    >
+                      {lead.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{lead.created}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
         {/* Pagination */}
         <Pagination className="mt-5">
@@ -138,9 +141,11 @@ const CustomerDetailsTable = () => {
                 className={page === 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
+
             <PaginationItem>
               Page {page} of {totalPages}
             </PaginationItem>
+
             <PaginationItem>
               <PaginationNext
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
