@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { menuItems } from "@/lib/constants";
 import type { CustomerType } from "@/lib/types";
 
@@ -63,8 +63,11 @@ const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
   );
 
   const navigate = useNavigate();
+  const customersUrl = menuItems.find(
+    (item) => item.title === "Customers",
+  )!.url;
 
-  // To Formate the phone to look nicer
+  // Format phone number
   const formatPhoneNumber = (phone: string) => {
     const cleaned = phone.replace(/\D/g, "");
 
@@ -78,14 +81,19 @@ const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
   return (
     <Card className="shadow-xl">
       <CardHeader className="space-y-4">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-2">
           <div className="space-y-1">
             <CardTitle>All Customers</CardTitle>
             <CardDescription>View and manage customer records</CardDescription>
           </div>
-          <Badge variant="secondary">{customers.length} customers</Badge>
+
+          <Badge variant="secondary" className="shrink-0">
+            {customers.length}{" "}
+            {customers.length === 1 ? "customer" : "customers"}
+          </Badge>
         </div>
-        <div className="flex gap-2">
+
+        <div className="flex flex-col gap-2 sm:flex-row">
           <Input
             placeholder="Search customers..."
             className="rounded-full"
@@ -99,7 +107,10 @@ const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <Button variant="outline" className="rounded-full">
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full sm:w-auto"
+                >
                   <SlidersHorizontalIcon />
                   Filter
                 </Button>
@@ -136,70 +147,117 @@ const CustomersTable = ({ customers }: { customers: CustomerType[] }) => {
       </CardHeader>
 
       <CardContent>
-        <Table>
-          <TableHeader className="bg-muted/50">
-            <TableRow>
-              <TableHead className="px-5">Name</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Address</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
+        {filteredCustomers.length === 0 ? (
+          <div className="py-8 text-center text-sm text-muted-foreground">
+            No customers found.
+          </div>
+        ) : (
+          <>
+            {/* Desktop table */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader className="bg-muted/50">
+                  <TableRow>
+                    <TableHead className="px-5">Name</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Address</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
 
-          <TableBody>
-            {paginatedCustomers.map((customer) => (
-              <TableRow
-                key={customer.id}
-                className="cursor-pointer"
-                onClick={() =>
-                  navigate(
-                    `${menuItems.find((item) => item.title === "Customers")!.url}/${customer.id}`,
-                  )
-                }
-              >
-                <TableCell className="">{customer.name}</TableCell>
-                <TableCell>{formatPhoneNumber(customer.phone)}</TableCell>
-                <TableCell className="p-0">{customer.email || "—"}</TableCell>
-                <TableCell className="p-0">{customer.address || "—"}</TableCell>
-                <TableCell className="p-0">
-                  <Badge
-                    variant={
-                      customer.status === true ? "default" : "destructive"
+                <TableBody>
+                  {paginatedCustomers.map((customer) => (
+                    <TableRow
+                      key={customer.id}
+                      className="cursor-pointer"
+                      onClick={() => navigate(`${customersUrl}/${customer.id}`)}
+                    >
+                      <TableCell>{customer.name}</TableCell>
+                      <TableCell>{formatPhoneNumber(customer.phone)}</TableCell>
+                      <TableCell>{customer.email || "—"}</TableCell>
+                      <TableCell>{customer.address || "—"}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={customer.status ? "default" : "destructive"}
+                        >
+                          {customer.status ? "Active" : "Inactive"}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile customer cards */}
+            <div className="space-y-3 md:hidden">
+              {paginatedCustomers.map((customer) => (
+                <Link
+                  key={customer.id}
+                  to={`${customersUrl}/${customer.id}`}
+                  className="block rounded-xl border p-4 transition-colors hover:bg-muted/50"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-medium">{customer.name}</p>
+
+                    <Badge
+                      variant={customer.status ? "default" : "destructive"}
+                    >
+                      {customer.status ? "Active" : "Inactive"}
+                    </Badge>
+                  </div>
+
+                  <div className="mt-3 space-y-2 text-sm">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Phone</p>
+                      <p>{formatPhoneNumber(customer.phone)}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs text-muted-foreground">Email</p>
+                      <p className="break-all">{customer.email || "—"}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs text-muted-foreground">Address</p>
+                      <p>{customer.address || "—"}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            <Pagination className="mt-5">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => setPage(Math.max(1, page - 1))}
+                    aria-disabled={page === 1}
+                    className={
+                      page === 1 ? "pointer-events-none opacity-50" : ""
                     }
-                  >
-                    {customer.status ? "Active" : "Inactive"}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  />
+                </PaginationItem>
 
-        {/* Pagination */}
-        <Pagination className="mt-5">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setPage(Math.max(1, page - 1))}
-                aria-disabled={page === 1}
-                className={page === 1 ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-            <PaginationItem>
-              Page {page} of {totalPages}
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => setPage(Math.min(totalPages, page + 1))}
-                aria-disabled={page >= totalPages}
-                className={
-                  page >= totalPages ? "pointer-events-none opacity-50" : ""
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+                <PaginationItem>
+                  Page {page} of {totalPages}
+                </PaginationItem>
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => setPage(Math.min(totalPages, page + 1))}
+                    aria-disabled={page >= totalPages}
+                    className={
+                      page >= totalPages ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </>
+        )}
       </CardContent>
     </Card>
   );
