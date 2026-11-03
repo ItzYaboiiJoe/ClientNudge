@@ -89,7 +89,7 @@ const CustomerDetailsTable = () => {
 
       <CardContent>
         <div className="w-full overflow-x-auto">
-          <Table className="min-w-[600px]">
+          <Table className="min-w-150">
             <TableHeader className="bg-muted/50">
               <TableRow>
                 <TableHead className="px-5">Lead</TableHead>
