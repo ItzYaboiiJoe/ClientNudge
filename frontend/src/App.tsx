@@ -5,6 +5,7 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import CustomersPage from "./pages/CustomersPage";
 import CustomerDetailsPage from "./pages/CustomerDetailsPage";
+import LeadsPage from "./pages/LeadsPage";
 
 import { BrowserRouter, Routes, Route } from "react-router";
 import NotFoundPage from "./components/NotFoundPage";
@@ -31,6 +32,7 @@ function App() {
               path="/customers/:customerId"
               element={<CustomerDetailsPage />}
             />
+            <Route path="/leads" element={<LeadsPage />} />
           </Route>
         </Route>
       </Routes>
