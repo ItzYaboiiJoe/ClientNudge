@@ -6,14 +6,20 @@ import type { CustomerType } from "@/lib/types";
 import { getCustomerInfo } from "./backend/getCustomerInfo";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
+import NotFoundPage from "@/components/NotFoundPage";
 
 const CustomerDetails = () => {
   const { customerId } = useParams();
 
-  const { data: customerInfo } = useQuery<CustomerType>({
+  const { data: customerInfo, isError } = useQuery<CustomerType>({
     queryKey: ["customerInfo", customerId],
     queryFn: () => getCustomerInfo(Number(customerId)),
+    retry: false,
   });
+
+  if (isError) {
+    return <NotFoundPage />;
+  }
 
   return (
     <div className="space-y-6 p-10">
