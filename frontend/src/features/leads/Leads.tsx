@@ -1,5 +1,6 @@
 import LeadsHeader from "./LeadsHeader";
 import LeadsStats from "./LeadsStats";
+import LeadsTable from "./LeadsTable";
 
 const Leads = () => {
   return (
@@ -8,6 +9,8 @@ const Leads = () => {
       <LeadsHeader />
       {/* Stats */}
       <LeadsStats />
+      {/* Table */}
+      <LeadsTable />
     </div>
   );
 };
